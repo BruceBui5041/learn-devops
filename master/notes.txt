@@ -1,0 +1,25 @@
+How to install vagrant with its plugin
+ https://gist.github.com/sbailliez/f22db6434ac84eccb6d3c8833c85ad92?permalink_comment_id=4012631
+
+How to create user on ubuntu
+ 1. "sudo useradd -m <username>" // (-m: to only allow user to modify in the /home/brucedev folder)
+ 2. sudo passwd <username> // set user passwd
+ 3. sudo userdel -r <username>
+ To check existing user: sudo cat /etc/passwd // list users
+
+Install ssh on ubuntu server
+ sudo apt install openssh-server
+ 
+SSH connect
+ 1. create ssh key on client in .ssh folder
+  sudo ssh-keygen -f <username> -C <username> (create <username> pri pub key in current folder)
+
+ 2. add the pub key into the authorized_keys file in <username> folder
+ 3. to select rsa pub key to connect to server, use this:
+	ssh -i <key path on client> <username>@<id>
+	ex: ssh -i /Users/bruce/.ssh/id_rsa_brucedev1 brucedev1@192.168.24.128
+
+
+
+
+
