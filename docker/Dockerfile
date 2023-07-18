@@ -6,6 +6,12 @@ FROM node:${NODE_VERIONS}
 #ARG can have multiple ARF instruction on one Dockerfile
 ARG WORK_DIR=/app
 
+# add new user
+RUN useradd -m <username>
+
+# Use USER intruction to now allow using root user and avoid override or delete each other files
+USER <username>
+
 # when run exec -it container_name /bin/bash docker will automatically go to WORKDIR
 WORKDIR ${WORK_DIR}
 
