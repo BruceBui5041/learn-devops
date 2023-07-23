@@ -1,4 +1,4 @@
-FROM node:latest AS BUILDER
+FROM node:20-alpine AS BUILDER
 WORKDIR /app
 COPY ./package.json .
 COPY ./package-lock.json .
