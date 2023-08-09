@@ -1,0 +1,62 @@
+version: '3'
+
+networks:
+  be:
+    driver: bridge
+
+volumes:
+  test:
+  html_files:
+
+services:
+  backend:
+    platform: linux/amd64
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    # restart: always
+    # restart: unless-stopped # restart unless it is stopped not when being stopped manually
+    # restart: on-failure:5  # restart 5 times if the container fails with exit code != 0
+    command: "go run main.go"
+    ports:
+      - "5000:5000"
+    environment:
+      - CGO_ENABLED=0
+      - GOOS=linux
+      - GOARCH=amd64
+      - TZ=Asia/Ho_Chi_Minh
+      - POSTGRES_HOST=postgres # if two containers are in the same network, they can access each other by using the service name
+    networks:
+      - be
+    volumes:
+      - test:/app
+    depends_on:
+      - postgres
+    healthcheck:
+      test: curl -f http://localhost:5000/health || exit 1
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  postgres:
+    platform: linux/amd64
+    image: postgres:13.3-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - TZ=Asia/Ho_Chi_Minh
+    networks:
+      - be
+    volumes:
+      - .db:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres || exit 1
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
