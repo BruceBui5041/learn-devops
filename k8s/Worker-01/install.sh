@@ -86,9 +86,9 @@ sudo apt-get -y update
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
-# remove docker config to init kubeadm
-# rm /etc/containerd/config.toml
-# systemctl restart containerd
+remove docker config to init kubeadm
+rm /etc/containerd/config.toml
+systemctl restart containerd
 
 # sudo apt-get install -y -q kubeadm kubelet kubectl
 
