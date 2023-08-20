@@ -1,25 +1,26 @@
 Vagrant.configure("2") do |config|
 	config.vm.box = "starboard/ubuntu-arm64-20.04.5"
-	config.vm.network "public_network", ip: "172.168.24.129" # master ip plus one
-	# config.vm.network "private_network", ip: "172.168.24.129" # master ip plus one
 	config.vm.box_version = "20221120.20.40.0"
 	config.vm.box_download_insecure = true
 	config.vm.hostname = "worker-01"
 	config.vm.provider "vmware_desktop" do |v|
-		v.memory = 1024
-		v.cpus = 1
+		v.memory = 2048
+		v.cpus = 2
 		v.ssh_info_public = true
 		v.gui = true
 		v.linked_clone = false
-		v.vmx["ethernet0.virtualdev"] = "vmxnet3"
+		# v.vmx["ethernet0.virtualdev"] = "vmxnet3"
+		v.vmx['ethernet0.addressType'] = 'static'
 	end
-	config.vm.provision "shell", path: "./install.sh"
-	# config.vm.provision "shell", inline: <<-SHELL
-	#     echo "root password"
-	#     echo "123" | passwd --stdin root
-	#     sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-	#     systemctl reload sshd
-	#     SHELL
+	config.vm.network "private_network", ip: "172.168.24.129", type: "dhcp", name: "vmnet3"
+	# config.ssh.host = '192.168.1.1'
+	# config.vm.provision "shell", path: "./install.sh"
+	config.vm.provision "shell", inline: <<-SHELL
+	    echo "root password"
+	    echo "123" | passwd --stdin root
+	    sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+	    systemctl reload sshd
+	    SHELL
   
   end
   

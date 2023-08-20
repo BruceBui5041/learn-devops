@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: advanced-pod
+  labels:
+    app: advanced-app
+    tier: backend
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      livenessProbe: # NOTE: livenessProbe is used to check if the container is alive
+        httpGet:
+          path: /abcd.html # NOTE: if the path is not found, the container will be restarted
+          port: 80
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        failureThreshold: 3
+      # NOTE: readinessProbe is used to check if the container is ready to serve traffic,
+      # if not ready, it will not be receiving traffic from the service
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        failureThreshold: 1
+      # volumeMounts:
+      #   - name: nginx-config
+      #     mountPath: /etc/nginx/nginx.conf
+      #     subPath: nginx.conf
+  # - name: redis
+  #   image: redis:latest
+  #   env:
+  #   - name: REDIS_PASSWORD
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: redis-password
+  #         key: password
+  #   ports:
+  #   - containerPort: 6379
+  #   volumeMounts:
+  #   - name: redis-data
+  #     mountPath: /data
+  # volumes:
+  #   - name: nginx-config
+  #     configMap:
+  #       name: nginx-config
+  # - name: redis-data
+  #   emptyDir: {}

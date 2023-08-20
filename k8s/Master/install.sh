@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo su
-cd ~
 sudo apt-get -y update
 sudo apt-get -y install ca-certificates curl gnupg
 

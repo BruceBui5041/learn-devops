@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  nodeName: worker-1-k8s
+  containers:
+    - name: nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
