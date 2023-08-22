@@ -38,7 +38,7 @@ kubectl get pods -n calico-system
 ## Then you can join any number of worker nodes by running the following on each as root:
 
 ```bash
-# the token and the port will be different in your case
+# the token and the ip will be different in your case
 kubeadm join 192.168.24.130:6443 --token 5eq7p5.vj8azeiasb904miu --discovery-token-ca-cert-hash sha256:81c9b3fcf2e806a4b4b87c4bc249eb6ce2258f208dbfc5b7c69b629c718a8e7a
 
 # use the command below to get new join command
