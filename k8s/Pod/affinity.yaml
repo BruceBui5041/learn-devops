@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: nginx
+  # nodeSelector:
+  #   disktype: ssd
+  # NOTE: Use to find node/pod and create them base on condition
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: # NOTE: only effect new/creating node
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: environment
+                operator: NotIn
+                values:
+                  - staging
+                  - dev
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - worker-1
+        topologyKey: kubernetes.io/hostname # NOTE: Có thể dùng để tim và tạo node theo region trên cloud cho gần nhau
+    nodeAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                  - worker-1
+        topologyKey: kubernetes.io/hostname # NOTE: Nếu được dùng ở anti thì là để tránh gần với nhau
+
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - web-store
+          topologyKey: "kubernetes.io/hostname" # NOTE: với pod nêu anti thì là để tránh tạo pod chung 1 node
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - store
+          topologyKey: "kubernetes.io/hostname" #NOTE: với k anti thì là để tạo pod trong những node gần nhau thoả điều kiện bên trên

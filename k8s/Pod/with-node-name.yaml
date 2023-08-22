@@ -3,8 +3,10 @@ kind: Pod
 metadata:
   name: nginx
 spec:
-  nodeName: worker-1-k8s
+  nodeName: worker-02
   containers:
     - name: nginx
       image: nginx
+      ports:
+        - containerPort: 80
       imagePullPolicy: IfNotPresent

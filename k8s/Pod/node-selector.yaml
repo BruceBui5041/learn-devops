@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+  nodeSelector:
+    disk: ssd5 # NOTE: find by labels of that node, key-value must appear on Node . Can check with "kubecrl describe node <node_name>"
